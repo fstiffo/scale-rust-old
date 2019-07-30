@@ -5,5 +5,5 @@ use scale::Scale;
 
 fn main() {
     let scale = Scale::new();
-    println!("Hello, world!");
+    println!("{}", scale.cassa());
 }

@@ -80,4 +80,22 @@ impl Scale {
             movimenti,
         }
     }
+
+    fn contabile(&self, op: &Operazione) -> d128 {
+    match op {
+        &Op::VersamentoQuote(_, d) => d,
+        &Op::PagamentoScale => -self.attuale.1.costo_scale,
+        &Op::AltraSpesa(_, d) => -d,
+        &Op::AltroVersamento(_,d) => d,
+        &Op::Prestito(d) => -d,
+        &Op::Restituzione(d) => d
+    }
+} 
+    pub fn cassa(&self) -> d128 {
+        let mut somma = d128!(0);
+        for d in self.movimenti.iter().map(|(_, op)| self.contabile(op)) {
+            somma += d
+        }
+        somma
+    }
 }
