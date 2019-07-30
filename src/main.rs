@@ -5,5 +5,5 @@ use scale::Scale;
 
 fn main() {
     let scale = Scale::new();
-    println!("{}", scale.cassa());
+    println!("{}", scale.cassa(), scale.tesoretto(scale::from_ymd!(2019,8,1)));
 }
