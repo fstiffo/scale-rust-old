@@ -11,7 +11,7 @@ pub enum Condomino {
     Giulia,
 }
 
-use Condomino as Cond;
+use Condomino as Co;
 
 pub enum Operazione {
     VersamentoQuote(Condomino, d128),
@@ -61,15 +61,15 @@ impl Scale {
                 quota_mensile: d128!(12),
             },
         );
-        let condomini = [Cond::Michela, Cond::Gerardo, Cond::Elena, Cond::Giulia];
+        let condomini = [Co::Michela, Co::Gerardo, Co::Elena, Co::Giulia];
         let movimenti: Vec<Movimento> = vec![
             (
                 tempo_zero,
                 Op::AltroVersamento("Appianamento".to_string(), d128!(333)),
             ),
-            (tempo_zero, Op::VersamentoQuote(C::Michela, d128!(74))),
-            (tempo_zero, Op::VersamentoQuote(C::Gerardo, d128!(78))),
-            (tempo_zero, Op::VersamentoQuote(C::Elena, d128!(48))),
+            (tempo_zero, Op::VersamentoQuote(Co::Michela, d128!(74))),
+            (tempo_zero, Op::VersamentoQuote(Co::Gerardo, d128!(78))),
+            (tempo_zero, Op::VersamentoQuote(Co::Elena, d128!(48))),
             (naive_date!(2019, 7, 22), Op::Prestito(d128!(500))),
             (naive_date!(2019, 7, 11), Op::PagamentoScale),
         ];
