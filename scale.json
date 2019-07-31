@@ -1,0 +1,65 @@
+{
+    "tempo_zero": "2019-07-01",
+    "attuale": [
+        "2019-07-01",
+        {
+            "costo_scale": 20,
+            "num_pulize_mese": 2,
+            "quota_mensile": 12
+        }
+    ],
+    "condomini": [
+        "Michela",
+        "Gerardo",
+        "Elena",
+        "Giulia"
+    ],
+    "movimenti": [
+        [
+            "2019-07-01",
+            {
+                "AltroVersamento": [
+                    "Appianamento",
+                    333
+                ]
+            }
+        ],
+        [
+            "2019-07-01",
+            {
+                "VersamentoQuote": [
+                    "Michela",
+                    74
+                ]
+            }
+        ],
+        [
+            "2019-07-01",
+            {
+                "VersamentoQuote": [
+                    "Gerardo",
+                    78
+                ]
+            }
+        ],
+        [
+            "2019-07-01",
+            {
+                "VersamentoQuote": [
+                    "Elena",
+                    48
+                ]
+            }
+        ],
+        [
+            "2019-07-22",
+            {
+                "Prestito": 500
+            }
+        ],
+        [
+            "2019-07-11",
+            "PagamentoScale"
+        ]
+    ]
+}

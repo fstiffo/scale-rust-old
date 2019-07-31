@@ -1,8 +1,17 @@
 #![warn(clippy::all)]
 
 extern crate chrono;
-use chrono::NaiveDate;
+use chrono::naive;
+use chrono::{Datelike, NaiveDate};
 
+extern crate serde;
+use serde::Serialize;
+// use serde::Serialize;
+
+extern crate serde_json;
+use serde_json::Result;
+
+#[derive(Serialize)]
 pub enum Condomino {
     Michela,
     Gerardo,
@@ -12,6 +21,7 @@ pub enum Condomino {
 
 use Condomino as Co;
 
+#[derive(Serialize)]
 pub enum Operazione {
     VersamentoQuote(Condomino, u32),
     PagamentoScale,
@@ -24,6 +34,7 @@ use Operazione as Op;
 
 pub type Movimento = (NaiveDate, Operazione);
 
+#[derive(Serialize)]
 pub struct Param {
     costo_scale: u32,
     num_pulize_mese: u32,
@@ -49,6 +60,7 @@ const ANNO_ZERO: i32 = 2019;
 const MESE_ZERO: u32 = 7;
 const GIORNO_ZERO: u32 = 1;
 
+#[derive(Serialize)]
 pub struct Scale {
     tempo_zero: NaiveDate,
     attuale: Attuale,
@@ -138,5 +150,13 @@ impl Scale {
         let mesi = since!(oggi, self.tempo_zero).num_days() as i32 / 30;
         let num_condomini = self.condomini.len() as i32;
         mesi * num_condomini * self.attuale.1.quota_mensile as i32 + altro - pagamenti
+    }
+
+    pub fn print_serialize(&self) -> Result<()> {
+        let j = serde_json::to_string(&self)?;
+
+        println!("{}", j);
+
+        Ok(())
     }
 }
