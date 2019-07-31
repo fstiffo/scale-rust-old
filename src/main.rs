@@ -11,4 +11,5 @@ fn main() {
     let scale = Scale::new();
     println!("{}", scale.tesoretto(from_ymd!(2019, 8, 1)));
     scale.print_serialize();
+    scale.save_json();
 }

@@ -10,10 +10,11 @@ use serde::{Deserialize, Serialize};
 extern crate serde_json;
 use serde_json::Result;
 
-use std::fs::File;
+use std::io::prelude::*;
+use std::fs::{File, OpenOptions};
 use std::path::Path;
 
-#[derive(Serialize,Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub enum Condomino {
     Michela,
     Gerardo,
@@ -70,43 +71,48 @@ pub struct Scale {
     movimenti: Vec<Movimento>,
 }
 
+fn setup_zero() -> Scale {
+    let tempo_zero = from_ymd!(ANNO_ZERO, MESE_ZERO, GIORNO_ZERO);
+    let attuale: Attuale = (
+        tempo_zero,
+        Param {
+            costo_scale: 20,
+            num_pulize_mese: 2,
+            quota_mensile: 12,
+        },
+    );
+    let condomini = [Co::Michela, Co::Gerardo, Co::Elena, Co::Giulia];
+    let movimenti: Vec<Movimento> = vec![
+        (
+            tempo_zero,
+            Op::AltroVersamento("Appianamento".to_string(), 333),
+        ),
+        (tempo_zero, Op::VersamentoQuote(Co::Michela, 74)),
+        (tempo_zero, Op::VersamentoQuote(Co::Gerardo, 78)),
+        (tempo_zero, Op::VersamentoQuote(Co::Elena, 48)),
+        (from_ymd!(2019, 7, 22), Op::Prestito(500)),
+        (from_ymd!(2019, 7, 11), Op::PagamentoScale),
+    ];
+    Scale {
+        tempo_zero,
+        attuale,
+        condomini,
+        movimenti,
+    }
+}
+
 impl Scale {
     pub fn new() -> Scale {
-        let tempo_zero = from_ymd!(ANNO_ZERO, MESE_ZERO, GIORNO_ZERO);
-        let attuale: Attuale = (
-            tempo_zero,
-            Param {
-                costo_scale: 20,
-                num_pulize_mese: 2,
-                quota_mensile: 12,
-            },
-        );
-        let condomini = [Co::Michela, Co::Gerardo, Co::Elena, Co::Giulia];
-        let movimenti: Vec<Movimento> = vec![
-            (
-                tempo_zero,
-                Op::AltroVersamento("Appianamento".to_string(), 333),
-            ),
-            (tempo_zero, Op::VersamentoQuote(Co::Michela, 74)),
-            (tempo_zero, Op::VersamentoQuote(Co::Gerardo, 78)),
-            (tempo_zero, Op::VersamentoQuote(Co::Elena, 48)),
-            (from_ymd!(2019, 7, 22), Op::Prestito(500)),
-            (from_ymd!(2019, 7, 11), Op::PagamentoScale),
-        ];
-        /*
-        Scale {
-            tempo_zero,
-            attuale,
-            condomini,
-            movimenti,
-        }
-        */
         let json_file_path = Path::new("scale.json");
-        let json_file = File::open(json_file_path).expect("file not found");
-        let deserialized_scala: Scale =
-            serde_json::from_reader(json_file).expect("error whiler reading json");
-
-        deserialized_scala
+        if let Ok(json_file) = File::open(json_file_path) {
+            if let Ok(deserialized_scala) = serde_json::from_reader(json_file) as Result<Scale> {
+                deserialized_scala
+            } else {
+                setup_zero()
+            }
+        } else {
+            setup_zero()
+        }
     }
 
     fn contabile(&self, op: &Operazione) -> i32 {
@@ -167,6 +173,16 @@ impl Scale {
 
         println!("{}", j);
 
+        Ok(())
+    }
+
+    pub fn save_json(&self) -> std::io::Result<()> {
+        let json_file_path = Path::new("scale.json");
+        let mut json_file = OpenOptions::new().write(true).create(true).open(json_file_path)?;
+
+        if let Ok(j) = serde_json::to_string(&self) {
+             write!(json_file, "{}", j)?;
+        }       
         Ok(())
     }
 }
