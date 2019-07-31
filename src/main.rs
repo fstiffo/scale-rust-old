@@ -1,9 +1,13 @@
 #![warn(clippy::all)]
-#[macro_use]
+
+extern crate chrono;
+use chrono::NaiveDate;
+
 mod scale;
+#[macro_use(from_ymd)]
 use scale::Scale;
 
 fn main() {
     let scale = Scale::new();
-    println!("{}", scale.cassa(), scale.tesoretto(scale::from_ymd!(2019,8,1)));
+    println!("{}", scale.tesoretto(from_ymd!(2019, 8, 1)));
 }
