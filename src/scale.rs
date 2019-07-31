@@ -1,17 +1,19 @@
 #![warn(clippy::all)]
 
 extern crate chrono;
-use chrono::naive;
-use chrono::{Datelike, NaiveDate};
+use chrono::NaiveDate;
 
 extern crate serde;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 // use serde::Serialize;
 
 extern crate serde_json;
 use serde_json::Result;
 
-#[derive(Serialize)]
+use std::fs::File;
+use std::path::Path;
+
+#[derive(Serialize,Deserialize)]
 pub enum Condomino {
     Michela,
     Gerardo,
@@ -21,7 +23,7 @@ pub enum Condomino {
 
 use Condomino as Co;
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub enum Operazione {
     VersamentoQuote(Condomino, u32),
     PagamentoScale,
@@ -34,7 +36,7 @@ use Operazione as Op;
 
 pub type Movimento = (NaiveDate, Operazione);
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Param {
     costo_scale: u32,
     num_pulize_mese: u32,
@@ -60,7 +62,7 @@ const ANNO_ZERO: i32 = 2019;
 const MESE_ZERO: u32 = 7;
 const GIORNO_ZERO: u32 = 1;
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Scale {
     tempo_zero: NaiveDate,
     attuale: Attuale,
@@ -91,12 +93,20 @@ impl Scale {
             (from_ymd!(2019, 7, 22), Op::Prestito(500)),
             (from_ymd!(2019, 7, 11), Op::PagamentoScale),
         ];
+        /*
         Scale {
             tempo_zero,
             attuale,
             condomini,
             movimenti,
         }
+        */
+        let json_file_path = Path::new("scale.json");
+        let json_file = File::open(json_file_path).expect("file not found");
+        let deserialized_scala: Scale =
+            serde_json::from_reader(json_file).expect("error whiler reading json");
+
+        deserialized_scala
     }
 
     fn contabile(&self, op: &Operazione) -> i32 {
