@@ -5,4 +5,7 @@ FROM gitpod/workspace-full
 # RUN brew install bastet
 #
 # More information: https://www.gitpod.io/docs/config-docker/
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs && ./sh.rustup.rs -y && rustup update stable
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs 
+RUN chmod +x sh.rustup.rs 
+RUN ./sh.rustup.rs
+RUN rustup update
