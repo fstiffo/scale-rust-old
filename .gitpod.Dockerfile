@@ -8,5 +8,4 @@ FROM gitpod/workspace-full
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > sh.rustup.rs 
 RUN chmod +x sh.rustup.rs 
 RUN ./sh.rustup.rs -y
-RUN sudo apt install source -y
 RUN . $HOME/.cargo/env
