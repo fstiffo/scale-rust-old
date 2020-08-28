@@ -1,4 +1,4 @@
-FROM gitpod/workspace-base
+FROM gitpod/workspace-thin
 
 # Install custom tools, runtimes, etc.
 # For example "bastet", a command-line tetris clone:
